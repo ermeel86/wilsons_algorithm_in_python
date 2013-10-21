@@ -8,6 +8,7 @@ without periodic boundary conditions.
 Eren Metin Elci <eren.metin.elci@gmail.com>
 """
 from __future__ import print_function
+from wilsons_ust_weights import Wilsons_Algorithm
 import numpy as np
 from sys import argv
 ###############################################################################
@@ -23,7 +24,7 @@ else:
     L = 32
 nv = L**2
 ###############################################################################
-# Lattice topology (square lattice)
+# Lattice topology (here square lattice)
 def coords(k):
     return k - (k/L)*L,k/L
 def idx(x,y):
@@ -67,58 +68,16 @@ weights.sort(axis=1) # inplace sort
 weights /= weights.sum(axis=1)[:,np.newaxis]
 weights = weights.cumsum(axis=1)
 ###############################################################################
-# Choose an edge from v's adjacency list (randomly)
-def random_edge(v,uniform_weights=False):
-    if uniform_weights:
-        return adj_list[v][np.random.randint(4)]
-    else:
-        r = np.random.uniform()
-        for i in xrange(4):
-            if weights[v,i] > r:
-                return adj_list[v,i]
-
-# Array to keep track which vertices have already been visited (and in which iteration)
-visited = -np.ones(nv,dtype=np.int32)
-# List of edges in the spanning tree
-l = []
-iteration = 0
-###############################################################################
-# Start the iteration at vertex i and return 
-# None if no edge is part of this loop erased path
-# or return a list of all edges 
-def le_path(i):
-    global iteration
-    v = i
-    path = []
-    while True:
-        if visited[v] >= 0 and  visited[v] < iteration:
-            break
-        visited[v] = iteration
-        n = random_edge(v) 
-        if visited[n] < iteration:
-            path.append((v,n))
-        v = n
-    return None if len(path) == 0 else path
-# 0 iteration, construct T(0)
-visited[0] = iteration 
-for vi in xrange(1,nv):
-    iteration+=1
-    v = vi
-    lp = le_path(v)
-    if lp != None:
-        l += lp
 ###############################################################################
 def wrapping_edge(e):
         x1,y1 = coords(e[0])
         x2,y2 = coords(e[1]) 
         return True if (abs(x2-x1) >1 or abs(y2-y1) > 1) else False
-
 ###############################################################################
 #Print dot format of spannig tree for square lattice base graph
 # for usage with graphviz
-def to_graphviz_square_lattice(l):
-    global L,nv,seed
-    
+def to_graphviz_square_lattice(l,L,seed):
+    nv = L**2 
     fname = "./stree_l{}_s{}.dot".format(L,seed)
     try:
         f = open(fname,"w")
@@ -128,8 +87,8 @@ def to_graphviz_square_lattice(l):
         x_pos = indices/L
         y_pos = indices - x_pos*L
         for idx in indices:
-            line_str = "\t{} [pos=\"{},{}!\", style=\"filled\",label=\"\""
-            line_str+=",width=\"0.1\", height=\"0.1\",shape=\"point\"];\n"
+            line_str = "\t{} [pos=\"{},{}!\", style=\"invisible\",label=\"\""
+            line_str+=",width=\"0.001\", height=\"0.001\"];\n"
             line_str = line_str.format(
             idx,lattice_const*y_pos[idx],lattice_const*x_pos[idx])
             print(line_str,file=f)
@@ -138,6 +97,10 @@ def to_graphviz_square_lattice(l):
                 print(e[0],"--",e[1],";",file=f)
             else:
                 print("//",e[0],"--",e[1],";",file=f)
+        print("labelloc=\"t\";",file=f)
+        lbl = "Spanning tree on {}x{} square lattice (seed = {})"
+        lbl = lbl.format(L,L,seed)
+        print("label=\"{}\";".format(lbl),file=f)
         print("}",file=f)
         f.close()
     except Exception as e:
@@ -153,6 +116,8 @@ def count_wrapping_edges(l):
             cnt+=1
     return cnt
 ###############################################################################
+wa = Wilsons_Algorithm(L,adj_list,weights)
+s_tree = wa.sample()
 print("Spanning Tree generated with total {} edges\
- and {} wrapping edges".format(len(l),count_wrapping_edges(l)))
-to_graphviz_square_lattice(l)
+ and {} wrapping edges".format(len(s_tree),count_wrapping_edges(s_tree)))
+to_graphviz_square_lattice(s_tree,L,seed)
