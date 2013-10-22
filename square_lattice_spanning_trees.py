@@ -116,8 +116,9 @@ def count_wrapping_edges(l):
             cnt+=1
     return cnt
 ###############################################################################
-wa = Wilsons_Algorithm(L,adj_list,weights)
-s_tree = wa.sample()
-print("Spanning Tree generated with total {} edges\
- and {} wrapping edges".format(len(s_tree),count_wrapping_edges(s_tree)))
-to_graphviz_square_lattice(s_tree,L,seed)
+if __name__ == "__main__":
+    wa = Wilsons_Algorithm(L,adj_list,weights)
+    s_tree = wa.sample()
+    print("Spanning Tree generated with total {} edges\
+     and {} wrapping edges".format(len(s_tree),count_wrapping_edges(s_tree)))
+    to_graphviz_square_lattice(s_tree,L,seed)
