@@ -1,0 +1,186 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Subsection*
+Random cluster model (Potts) in the limit 
+\begin_inset Formula $q\rightarrow0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Formula $q$
+\end_inset
+
+-state Potts model partition function is given by 
+\begin_inset Formula 
+\[
+\mathcal{Z}_{G}(q,v)=\mbox{\sum}_{\sigma}\exp\left[K\sum_{\langle i,j\rangle}\delta(\sigma_{i},\sigma_{j})\right]
+\]
+
+\end_inset
+
+ with 
+\begin_inset Formula $\sigma_{i}=0,1,\dots,q-1.$
+\end_inset
+
+ It can be shown that 
+\begin_inset Formula 
+\[
+\mathcal{Z}_{G}(q,v)=\sum_{\mathcal{A}\subseteq G}q^{k(\mathcal{A})}v^{b(\mathcal{A})}
+\]
+
+\end_inset
+
+ (a sum over all spanning sub-graphs 
+\begin_inset Formula $\mathcal{A}$
+\end_inset
+
+).
+ 
+\begin_inset Formula $k(\mathcal{A})$
+\end_inset
+
+ is the number of components and 
+\begin_inset Formula $b(\mathcal{A})$
+\end_inset
+
+ the number of edges in 
+\begin_inset Formula $\mathcal{A}$
+\end_inset
+
+ and 
+\begin_inset Formula $v=e^{K}-1$
+\end_inset
+
+.
+ The limit 
+\begin_inset Formula $q\rightarrow1$
+\end_inset
+
+ corresponds to independent bond percolation.
+ 
+\end_layout
+
+\begin_layout Standard
+The critical manifold for some two-dimensional models:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray*}
+(v^{2}-q)(v^{2}+4v+q) & = & 0\textnormal{ for square lattice}\\
+v^{3}+3v^{2}-q & = & 0\mbox{\textnormal{ for triangular lattice}}\\
+v^{3}-3qv-q^{2} & = & 0\mbox{\textnormal{ for hexagonal lattice}}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the limit 
+\begin_inset Formula $q\rightarrow0$
+\end_inset
+
+ with 
+\begin_inset Formula $\frac{v}{q^{\sigma}}=\alpha=const.$
+\end_inset
+
+ and 
+\begin_inset Formula $0<\sigma<1$
+\end_inset
+
+ it can be shown that (for connected and planar 
+\begin_inset Formula $G$
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\lim_{{q\rightarrow0\atop v/q^{\sigma}=\alpha}}q^{-V\sigma}q^{\sigma-1}\mbox{\mathcal{Z_{G}}(q,v)}=\alpha^{V-1}\mathcal{N}(G)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\mathcal{N}(G)$
+\end_inset
+
+ is the number of spanning trees of 
+\begin_inset Formula $G$
+\end_inset
+
+.
+\end_layout
+
+\end_body
+\end_document
