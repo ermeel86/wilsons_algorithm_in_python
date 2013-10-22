@@ -15,3 +15,4 @@ Implemented for a square lattice with periodic boundary conditions but flexible 
 References
 ----------
 - Itai Benjamini, Russel Lyons, Yuval Peres and Oded Schramm: Uniform spanning forests. http://www.jstor.org/discover/10.2307/2652913?uid=2&uid=4&sid=21102802567083
+- Oded Schramm, Uniform spanning trees, loop-erased random walk, and scaling limits, http://research.microsoft.com/en-us/um/people/schramm/memorial/usf-talk.ps
