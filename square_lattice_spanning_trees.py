@@ -11,6 +11,8 @@ from __future__ import print_function
 from wilsons_ust_weights import Wilsons_Algorithm
 import numpy as np
 from sys import argv
+import networkx as nx
+from  matplotlib import pyplot as plt
 ###############################################################################
 # Read possible command-line arguments
 if len(argv) > 1:
@@ -116,9 +118,40 @@ def count_wrapping_edges(l):
             cnt+=1
     return cnt
 ###############################################################################
+# Show the graph using networkx and save it to a file
+# if filename is provided.
+def to_networkx_square_lattice(s_tree,filename=None,padraig=True):
+    G = nx.Graph()
+    for e in s_tree:
+        G.add_edge(e[0],e[1])
+    pos = {}
+    n = [0,0]
+    for vertex in G:
+        if not padraig:
+            ##eren's version
+            x,y = coords(vertex)
+            pos[vertex] = [x,y]
+        else:
+            ##padraig's version
+            if n[1] >= L:
+                n[1] = 0
+                n[0] += 1#./(L)
+
+            pos[vertex] = [n[1],n[0]]
+            n[1] += 1#./(L)
+    if padraig:
+        nx.draw_networkx_nodes(G,pos,node_color='w',node_size=12,line_width=0.01)
+
+    nx.draw_networkx_edges(G,pos)
+    plt.axis('off')
+    if filename != None:
+        plt.savefig(filename)
+    plt.show()
+###############################################################################
 if __name__ == "__main__":
     wa = Wilsons_Algorithm(L,adj_list,weights)
     s_tree = wa.sample()
     print("Spanning Tree generated with total {} edges\
      and {} wrapping edges".format(len(s_tree),count_wrapping_edges(s_tree)))
-    to_graphviz_square_lattice(s_tree,L,seed)
+    #to_graphviz_square_lattice(s_tree,L,seed)
+    to_networkx_square_lattice(s_tree,padraig=False)
