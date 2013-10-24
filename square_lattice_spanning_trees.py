@@ -8,7 +8,6 @@ without periodic boundary conditions.
 Eren Metin Elci <eren.metin.elci@gmail.com>
 """
 from __future__ import print_function
-from wilsons_ust_weights import Wilsons_Algorithm
 import numpy as np
 from sys import argv
 import networkx as nx
@@ -25,6 +24,14 @@ if len(argv) > 2:
 else:
     L = 32
 nv = L**2
+C_Version = 1
+if len(argv) > 3:
+    C_Version = True if int(argv[3]) else 0
+if C_Version:
+    from wilsons_ust_weights_c import Wilsons_Algorithm
+    print("***Using C routines")
+else:
+    from wilsons_ust_weights_c import Wilsons_Algorithm
 ###############################################################################
 # Lattice topology (here square lattice)
 def coords(k):
@@ -68,7 +75,6 @@ for i in xrange(sort_indices.shape[0]):
 weights.sort(axis=1) # inplace sort
 # calculate transition prob. for random walk
 weights /= weights.sum(axis=1)[:,np.newaxis]
-weights = weights.cumsum(axis=1)
 ###############################################################################
 ###############################################################################
 def wrapping_edge(e):
@@ -120,38 +126,30 @@ def count_wrapping_edges(l):
 ###############################################################################
 # Show the graph using networkx and save it to a file
 # if filename is provided.
-def to_networkx_square_lattice(s_tree,filename=None,padraig=True):
+def to_networkx_square_lattice(s_tree,root_node=None,filename=None):
     G = nx.Graph()
     for e in s_tree:
         G.add_edge(e[0],e[1])
     pos = {}
     n = [0,0]
     for vertex in G:
-        if not padraig:
-            ##eren's version
-            x,y = coords(vertex)
-            pos[vertex] = [x,y]
-        else:
-            ##padraig's version
-            if n[1] >= L:
-                n[1] = 0
-                n[0] += 1#./(L)
-
-            pos[vertex] = [n[1],n[0]]
-            n[1] += 1#./(L)
-    if padraig:
-        nx.draw_networkx_nodes(G,pos,node_color='w',node_size=12,line_width=0.01)
-
+        x,y = coords(vertex)
+        pos[vertex] = [x,y]
+    # Highlight root node
+    if root_node:
+        nx.draw_networkx_nodes(G,{root_node: coords(root_node)},nodelist=[root_node],
+                node_color='r',node_size=12,line_width=0.01)
     nx.draw_networkx_edges(G,pos)
     plt.axis('off')
     if filename != None:
         plt.savefig(filename)
-    plt.show()
+    else:
+        plt.show()
 ###############################################################################
 if __name__ == "__main__":
     wa = Wilsons_Algorithm(L,adj_list,weights)
-    s_tree = wa.sample()
+    s_tree,root = wa.sample(seed)
     print("Spanning Tree generated with total {} edges\
      and {} wrapping edges".format(len(s_tree),count_wrapping_edges(s_tree)))
     #to_graphviz_square_lattice(s_tree,L,seed)
-    to_networkx_square_lattice(s_tree,padraig=False)
+    to_networkx_square_lattice(s_tree,root_node=root)
