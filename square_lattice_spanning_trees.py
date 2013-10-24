@@ -142,7 +142,7 @@ def to_networkx_square_lattice(s_tree,root_node=None,filename=None):
     nx.draw_networkx_edges(G,pos)
     plt.axis('off')
     if filename != None:
-        plt.savefig(filename)
+        plt.savefig(filename,bbox_inches='tight')
     else:
         plt.show()
 ###############################################################################
@@ -152,4 +152,4 @@ if __name__ == "__main__":
     print("Spanning Tree generated with total {} edges\
      and {} wrapping edges".format(len(s_tree),count_wrapping_edges(s_tree)))
     #to_graphviz_square_lattice(s_tree,L,seed)
-    to_networkx_square_lattice(s_tree,root_node=root)
+    to_networkx_square_lattice(s_tree,root_node=root,filename="ust.png")
