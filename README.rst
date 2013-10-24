@@ -1,7 +1,7 @@
-Python implementation of Wilson's algorithm for spanning trees
-==============================================================
+Python&C implementation of Wilson's algorithm for random spanning trees
+=======================================================================
 
-*Current version: 0.1*
+*Current version: 0.2*
 
 Description
 -----------
