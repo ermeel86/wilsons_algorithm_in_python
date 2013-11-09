@@ -11,6 +11,8 @@ from __future__ import print_function
 import numpy as np
 from sys import argv
 import networkx as nx
+from matplotlib import use
+use('Agg')
 from  matplotlib import pyplot as plt
 ###############################################################################
 # Read possible command-line arguments
@@ -32,6 +34,10 @@ if C_Version:
     print("***Using C routines")
 else:
     from wilsons_ust_weights_c import Wilsons_Algorithm
+if len(argv) > 4:
+    p = float(argv[4])
+else:
+    p=1.
 ###############################################################################
 # Lattice topology (here square lattice)
 def coords(k):
@@ -146,10 +152,11 @@ def to_networkx_square_lattice(s_tree,root_node=None,filename=None):
     else:
         plt.show()
 ###############################################################################
+###############################################################################
 if __name__ == "__main__":
-    wa = Wilsons_Algorithm(L,adj_list,weights)
-    s_tree,root = wa.sample(seed)
+    wa = Wilsons_Algorithm(adj_list,weights)
+    s_tree,root = wa.sample(seed,p=p)
     print("Spanning Tree generated with total {} edges\
      and {} wrapping edges".format(len(s_tree),count_wrapping_edges(s_tree)))
-    #to_graphviz_square_lattice(s_tree,L,seed)
-    to_networkx_square_lattice(s_tree,root_node=root,filename="ust.png")
+    to_graphviz_square_lattice(s_tree,L,seed)
+    #to_networkx_square_lattice(s_tree,root_node=root,filename="ust.png")

@@ -8,10 +8,10 @@ Description
 -----------
 
 Wilson's algorithm samples the space of spanning trees of a given graph according
-to the edge weights. Taking all edge-weight to be the same reduces to the sampling
+to the edge weights. Taking all edge-weights to be the same reduces to the sampling
 of uniform spanning trees (USTs).
 
-Implemented for a square lattice with periodic boundary conditions but flexible enough to extend to general graph G.
+Implemented for a square/cubic lattice with periodic boundary conditions but flexible enough to extend to general graph G.
 
 References
 ----------

@@ -11,9 +11,10 @@ from sys import argv
 from itertools import chain
 
 class Wilsons_Algorithm(object):
-    def __init__(self,l,adj_list,weights):
-        self.L = l
-        self.nv = l**2
+    def __init__(self,adj_list,weights):
+        self.nv = adj_list.shape[0]
+        # coordination number
+        self.coord = adj_list.shape[1]
         self.adj_list = adj_list
         # to be able to select random edges prop. to their weight
         self.weights = weights.cumsum(axis=1)
@@ -40,20 +41,23 @@ class Wilsons_Algorithm(object):
     # Choose an edge from v's adjacency list (randomly)
     def __random_edge(self,v,uniform_weights=False):
         if uniform_weights:
-            return self.adj_list[v][np.random.randint(4)]
+            return self.adj_list[v][np.random.randint(self.coord)]
         else:
             r = np.random.uniform()
-            for i in xrange(4):
+            for i in xrange(self.coord):
                 if self.weights[v,i] > r:
                     return self.adj_list[v,i]
 
    ###############################################################################
-    def sample(self,seed=None):
+    def sample(self,seed=None,p=1.):
         if seed != None:
             np.random.seed(int(seed))
         self.root = np.random.randint(self.nv)
         self.__RandomTreeWithRoot(self.root)
-        self.__extract_tree_edges()
+        if p< 1:
+            self.__extract_tree_edges_prob(p)
+        else:
+            self.__extract_tree_edges()
         return self.s_tree,self.root
     ############################################################################
     def __RandomTreeWithRoot(self,r):
@@ -78,6 +82,17 @@ class Wilsons_Algorithm(object):
             nb = self.Next[i]
             if nb >=0:
                 self.s_tree.append((i,nb))
+            else:
+                self.root = i
+    ############################################################################
+    def __extract_tree_edges_prob(self,p):
+        assert self.tree_gen
+        self.s_tree = []
+        for i in xrange(self.nv):
+            nb = self.Next[i]
+            if nb >=0:
+                if np.random.seed(p) < p:
+                    self.s_tree.append((i,nb))
             else:
                 self.root = i
 ###############################################################################

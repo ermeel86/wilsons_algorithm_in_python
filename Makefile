@@ -1,5 +1,5 @@
 CC=clang
-GCC_OPT=-O2 -Wall -Wextra -g 
+GCC_OPT=-O2 -Wall -Wextra 
 
 all: lib_wilson.so 
 OP=obj/
