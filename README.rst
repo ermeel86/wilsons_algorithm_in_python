@@ -1,7 +1,7 @@
 Python&C implementation of Wilson's algorithm for random spanning trees
 =======================================================================
 
-*Current version: 0.3*
+*Current version: 0.4*
 
 .. image:: ust.png
 Description
@@ -12,6 +12,8 @@ to the edge weights. Taking all edge-weights to be the same reduces to the sampl
 of uniform spanning trees (USTs).
 
 Implemented for a square/cubic lattice with periodic boundary conditions but flexible enough to extend to general graph G.
+
+Furthermore allows to analyse bond percolation on the UST ensemble.
 
 References
 ----------
