@@ -17,13 +17,13 @@ wilson_c = ctypes.CDLL(PATH_PREFIX+LIB_PATH)
 
 
 # specify paramter types
-wilson_c.set_rng_seed.argtypes = [ctypes.c_int]
-wilson_c.init_rng.argtypes = [ctypes.c_int]
-wilson_c.RandomTreeWithRoot.argtypes = [ctypes.c_uint, ctypes.c_uint,ctypes.c_uint, ctypes.c_void_p,
+wilson_c.set_rng_seed.argtypes = [ctypes.c_longlong]
+wilson_c.init_rng.argtypes = [ctypes.c_longlong]
+wilson_c.RandomTreeWithRoot.argtypes = [ctypes.c_ulonglong, ctypes.c_ulonglong,ctypes.c_ulonglong, ctypes.c_void_p,
         ctypes.c_void_p,ctypes.c_void_p,ctypes.c_void_p]
 wilson_c.set_rng_seed.restype = ctypes.c_ubyte
 wilson_c.init_rng.restype = ctypes.c_ubyte
-wilson_c.RandomTreeWithRoot.restype = ctypes.c_uint
+wilson_c.RandomTreeWithRoot.restype = ctypes.c_ulonglong
 
 
 class Wilsons_Algorithm(object):
@@ -42,7 +42,7 @@ class Wilsons_Algorithm(object):
         # Array to keep track which vertices have already been visited
         # (and in which iteration)
         self.InTree = np.zeros(self.nv,dtype=np.uint8)
-        self.Next = np.empty(self.nv,dtype=np.int32)
+        self.Next = np.empty(self.nv,dtype=np.int64)
         self.tree_gen = False
         self.s_tree = None
         self.seed = seed
@@ -67,7 +67,6 @@ class Wilsons_Algorithm(object):
         else:
             self.__extract_tree_edges()
 
-        print("Sample with seed {} completed".format(self.seed))
         return self.s_tree,self.root
     ############################################################################
     def __extract_tree_edges(self):

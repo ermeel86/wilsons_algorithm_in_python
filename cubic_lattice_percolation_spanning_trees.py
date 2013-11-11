@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 """
+Percolation on the UST ensemble.
+
 Wilson's algorithm for weighted STs on the 3d cubic lattice with p.b.c.
 Allows to specify distinguished weights for horizontal,vertical and wrapping 
 edges. The case of zero weight for wrapping edges corresponds to a lattice
@@ -9,33 +11,23 @@ Furthermore allows to do bond percolation on the generated spanning tree.
 Eren Metin Elci <eren.metin.elci@gmail.com>
 """
 from __future__ import print_function
+from scipy.misc import logsumexp
 import numpy as np
 from sys import argv
+from cluster_statistics import Cluster_Statistics_Cubic as CSC
+import matplotlib.pyplot as plt
 ###############################################################################
 # Read possible command-line arguments
 if len(argv) > 1:
-    seed = int(argv[1])
-else:
-    seed = 123456
-np.random.seed(seed)
-if len(argv) > 2:
-    L = int(argv[2])
+    L = int(argv[1])
 else:
     L = 32
 nv = L**3
 nv_2d = L**2
 C_Version = 1
-if len(argv) > 3:
-    C_Version = True if int(argv[3]) else 0
-if C_Version:
-    from wilsons_ust_weights_c import Wilsons_Algorithm
-    print("***Using C routines")
-else:
-    from wilsons_ust_weights import Wilsons_Algorithm
-if len(argv) > 4:
-    p = float(argv[4])
-else:
-    p=1.
+from wilsons_ust_weights_c import Wilsons_Algorithm
+print("***Using C routines")
+csc = CSC(L)
 ###############################################################################
 # Lattice topology (here square lattice)
 def coords(k):
@@ -47,7 +39,7 @@ def inc(a):
 def dec(a):
     return (a-1+L)%L
 # set to zero to prohibit wrapping edges; sets the weight of wrapping edges
-wrapping_edge_weight = 0. 
+wrapping_edge_weight = 1. 
 # set weight for x edges
 x_edge_weight = 1.
 # set weight for y edges
@@ -103,7 +95,29 @@ def count_wrapping_edges(l):
 ###############################################################################
 ###############################################################################
 if __name__ == "__main__":
+    ws = np.linspace(.01,1.,20)
+    binders = np.empty_like(ws)
+    giants = np.empty_like(ws)
     wa = Wilsons_Algorithm(adj_list,weights)
-    s_tree,root = wa.sample(seed,p=p)
-    print("Spanning Tree generated with total {} edges\
-     and {} wrapping edges".format(len(s_tree),count_wrapping_edges(s_tree)))
+    seeds = np.arange(1,20)
+    for j,w in enumerate(ws):
+        p = w #/(1.+w)
+        rslts = np.empty((len(seeds),4),dtype=np.float64)
+        for i,seed in enumerate(seeds):
+            s_tree,root = wa.sample(seed+j*100,p=p)
+            count_wrapping_edges(s_tree)
+            s_tree =  np.array(s_tree,dtype=np.uint64).ravel()
+            csc.cluster_analyse(s_tree)
+            o=csc.observables()
+            rslts[i,:] = o
+        l_sum_n = logsumexp(rslts[:,3])
+        l_sum_2_d = logsumexp(2*rslts[:,2])
+        binders[j] = np.exp(l_sum_n-l_sum_2_d)
+        giants[j] = np.mean(rslts[:,1])
+    giants /= L**3
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.plot(ws,binders,"o")
+    ax.plot(ws,giants,"s")
+    plt.show()
+

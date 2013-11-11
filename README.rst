@@ -1,7 +1,7 @@
 Python&C implementation of Wilson's algorithm for random spanning trees
 =======================================================================
 
-*Current version: 0.2*
+*Current version: 0.3*
 
 .. image:: ust.png
 Description

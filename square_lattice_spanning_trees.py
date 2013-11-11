@@ -12,7 +12,7 @@ import numpy as np
 from sys import argv
 import networkx as nx
 from matplotlib import use
-use('Agg')
+#use('Agg')
 from  matplotlib import pyplot as plt
 ###############################################################################
 # Read possible command-line arguments
@@ -33,7 +33,7 @@ if C_Version:
     from wilsons_ust_weights_c import Wilsons_Algorithm
     print("***Using C routines")
 else:
-    from wilsons_ust_weights_c import Wilsons_Algorithm
+    from wilsons_ust_weights import Wilsons_Algorithm
 if len(argv) > 4:
     p = float(argv[4])
 else:
@@ -58,7 +58,7 @@ horiz_edge_weight = 1.
 assert vert_edge_weight >0 and horiz_edge_weight >0
 ##############################################################################
 # generate adjacency list and weights
-adj_list = np.empty((nv,4),dtype=np.uint32)
+adj_list = np.empty((nv,4),dtype=np.uint64)
 weights = np.empty_like(adj_list,dtype=np.float64)
 for k in xrange(nv):
     x,y = coords(k)
@@ -158,5 +158,5 @@ if __name__ == "__main__":
     s_tree,root = wa.sample(seed,p=p)
     print("Spanning Tree generated with total {} edges\
      and {} wrapping edges".format(len(s_tree),count_wrapping_edges(s_tree)))
-    to_graphviz_square_lattice(s_tree,L,seed)
-    #to_networkx_square_lattice(s_tree,root_node=root,filename="ust.png")
+    #to_graphviz_square_lattice(s_tree,L,seed)
+    to_networkx_square_lattice(s_tree,root_node=root)
