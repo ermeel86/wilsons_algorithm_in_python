@@ -1,9 +1,16 @@
 Python&C implementation of Wilson's algorithm for random spanning trees
 =======================================================================
 
-*Current version: 0.4*
+*Current version: 0.4.1*
 
 .. image:: ust.png
+
+*Spanning Tree sampled from the UST on the square lattice*
+
+.. image:: cubic_spanning_tree_l4.png
+
+*Spanning Tree sampled from the UST on the cubic lattice*
+
 Description
 -----------
 
